@@ -1,0 +1,9 @@
+		img { width: 300px; padding: 0 1em 1em 1em; float: left;}
+		header { background-color: #4abdac; }
+		h1 { width: 2,5em ; font-weight: bold; font-family: verdana ; text-align: center; padding: 0.5em 0 ; margin: 0;}
+		h3 { width: 1,5em;  font-weight: bold; font-family: verdana; text-align: center; padding: 0.25em; margin: 0;}
+		h4 { margin: 0; }
+		p { background-color: #fc4a1a; font-weight: bold ;font-family: verdana ; font-size: 1em ; text-align: justify; padding: 0 1em 1em 1em; margin: 0;}	
+		div { background-color:  #f7b733 ;}
+		header, p { color : #ffffff ; }
+		.compartir { padding-right: 1em;}

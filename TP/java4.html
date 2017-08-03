@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>java 4</title>
+	<script type="text/javascript">
+		function hora(int) { 
+			var resul = "";
+			var resto = "";
+				resul = Math.trunc(int/60);
+			var	r = resul.toString();
+				resto = int%60;
+			var re = resto.toString();
+			if (resto < 9 ) {
+				alert(r.concat(":0").concat(re));
+				}
+				else { 
+				alert(r.concat(":").concat(re));
+				}
+		}
+		
+	</script>
+</head>
+<body>
+	<input onclick="hora(199)" type="button" value="IR"  />
+</body>
+</html>

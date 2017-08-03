@@ -1,0 +1,16 @@
+	nav { background-color: #252525; }
+	ul { margin: 0; }
+	li { list-style: none; display: inline-block;  }
+	li > a{ font-size: 14px; font-family: Arial; color: #868686; text-decoration: none;  }
+	.opcion { padding: 0 0.5em; }
+	.opcion a:hover { background-color: #141414; text-decoration: none; color: #fff;}
+	input { background-color: #57B157; font-size: 16px; font-family: Arial; color: #fff; }
+	.principal { background-color: #eeeeee; padding: 1em 2em ; }
+	.principal h1 { font-size: 42px; font-family: arial; padding-bottom: 0.5em;	}
+	.principal p { font-size: 18px; font-family: arial; }
+	.principal > p > a { text-decoration: none; }
+	.encabezado { font-size: 16px; font-family: Arial; color: #868686; text-indent: 1.5em; }
+	.secundario { font-family: arial; padding: 1em 2em ; width: 28%; float: left;}
+	.secundario h1  {  font-size: 24px;padding-bottom: 0.5em; }
+	.secundario p { font-size: 16px; }
+	footer { padding: 1em 2em ; }

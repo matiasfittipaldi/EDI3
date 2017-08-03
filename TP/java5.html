@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Java 5</title>
+	<script type="text/javascript">
+	function rle(param) {  
+		var resul = "";
+			for (var i=0;i<param.length;i++) {
+		var acu = 1 ; 
+				
+				if (param[i] = param[i+1]) { 
+					acu++;
+				}
+					 else
+					  {	resul += acu;
+					    resul += param[i] ;
+				}
+			}
+			alert(resul);
+	} 
+	</script>
+</head>
+<body>
+		<input onclick="rle('aabbccc')" type="button" value="ir"/>
+</body>
+</html>
+

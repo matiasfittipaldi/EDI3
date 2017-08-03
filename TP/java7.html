@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ejercicio Java 7</title>
+	<script type="text/javascript">
+		
+		function aceptar(){ 
+			var nom = document.querySelector('#Nombre').value;
+			var esp = " ";
+			var ap = document.querySelector("#Apellido").value;		
+			var resul = nom.concat(esp).concat(ap);
+			alert(resul);
+		}
+	</script>
+</head>
+<body>
+	<form>
+		<input type="text" id="Nombre" value="Ingrese Nombre">
+		<input type="text" id="Apellido" value="Ingrese Apellido">
+		<button onclick="aceptar()" type="submit">ACEPTAR</button>
+	</form>
+</body>
+</html>

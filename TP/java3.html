@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>java 3</title>
+	<script type="text/javascript">
+		function divisores(int) { 
+			var resul = "";
+				for (var i=1;i<=int;i++) {
+					if (int%i ==0) {
+						resul = resul.concat(" ").concat(i);
+					}
+				}
+				alert(resul);
+		}
+			
+	</script>
+</head>
+<body>
+	<input onclick="divisores(34)" type="button" value="IR" />
+</body>
+</html>
