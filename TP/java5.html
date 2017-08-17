@@ -4,19 +4,21 @@
 	<title>Java 5</title>
 	<script type="text/javascript">
 	function rle(param) {  
+	debugger;
 		var resul = "";
-			for (var i=0;i<param.length;i++) {
 		var acu = 1 ; 
-				
-				if (param[i] = param[i+1]) { 
-					acu++;
-				}
-					 else
-					  {	resul += acu;
-					    resul += param[i] ;
-				}
+		for (var i=0;i<param.length;i++) {
+			
+			if (param[i] == param[i+1]) { 
+				acu++;
 			}
-			alert(resul);
+			else {	
+				resul += acu;
+				resul += param[i];
+				acu = 1
+			}
+		}
+		alert(resul);
 	} 
 	</script>
 </head>

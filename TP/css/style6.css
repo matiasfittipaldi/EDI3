@@ -2,15 +2,20 @@
 		img { width: 10%;}
 		nav { background-color: #fafafa; padding-left: 0.5em; }
 		input { font-size: 13px; width: 500px; padding: 0.5em; }
-		li { font-size: 13px;  color : #777; text-decoration: none; list-style: none; display: inline; padding: 0 1em 0.5em 1em;}
-		li:hover { font-size: 13px;  color : #222; text-decoration: none; list-style: none; display: inline; }
-		.active { font-size: 13px;  color : #4285f4; text-decoration: none; list-style: none; display: inline; font-weight: bold;  }
+		li { list-style: none; display: inline; padding: 0 1em 0.5em 1em;}
+		nav li a { font-size: 13px;  color : #777; text-decoration: none; list-style: none;}
+		nav li a:hover { font-size: 13px;  color : #222; text-decoration: none; list-style: none;}
+		.active a { color : #4285f4; font-weight: bold;  border-bottom: 2px solid #4285f4}
 		.contador { font-size: 13px;  color: #9f9f9f; margin-left: 8em;}
 		.resultado { margin: 1em 0 1em 8em; }
-		.resultado > a {  font-size: 18px; text-decoration: none; }
-		.resultado > a:hover {  font-size: 18px; text-decoration: underline;}
+		.resultado > a{  font-size: 18px; text-decoration: none; } 
+		.resultado > a:hover {  font-size: 18px; text-decoration: underline;} 
 		.sub { color: #006621; font-size: 13px;}
 		.cuerpo { color: #545454; font-size: 13px;}
 		.pie { font-size: 13px; padding: 0 1em 0.5em 1em;  }
 		.pie:hover { font-size: 13px; text-decoration: underline; }
 		header { padding: 0.5em 0.2em; }
+		
+		header{
+			background-color: #fafafa;
+		}
