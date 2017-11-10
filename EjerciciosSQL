@@ -1,0 +1,35 @@
+1 =	SELECT * FROM `vendedor` WHERE Apellido LIKE "A%" AND Apellido LIKE "%Z"
+
+2 =	SELECT S.Nombre, C.Nombre, C.Apellido, V.idVenta FROM venta v 
+	INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal)
+	INNER JOIN cliente c ON (C.idCliente = v.idCliente )
+	WHERE S.Nombre LIKE "%SAXONN%" GROUP BY c.idCliente
+
+3 =	SELECT S.Nombre , S.Direccion, COUNT(V.idVendedor) FROM venta v 
+	INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal)
+	GROUP BY v.idSucursal
+
+4 =	SELECT P.Nombre,SUM(I.cantidad) FROM producto P INNER JOIN item i ON (i.idProducto = p.idProducto) GROUP BY P.Nombre
+
+5 =	SELECT s.Nombre, SUM(i.cantidad) as TOT from sucursal s
+	INNER JOIN venta v ON (v.idSucursal = s.idSucursal)
+	INNER JOIN item i ON (I.idVenta = V.idVenta)  
+	GROUP by s.Nombre
+	HAVING TOT > 1
+	LIMIT 1,10
+
+6 =	select ve.Nombre, COUNT(vta.idVenta) as cantidad FROM venta vta 
+	INNER JOIN vendedor ve ON (ve.idVendedor = vta.idVendedor) 
+	GROUP BY vta.idVendedor HAVING cantidad > 2
+
+7 = SELECT Nombre,Apellido,DNI FROM vendedor v LEFT JOIN venta vta ON (v.idVendedor = vta.idVendedor) WHERE vta.idVenta is NULL
+
+8 = SELECT s.*,p.*,sum(i.cantidad) FROM venta v INNER JOIN sucursal s on (v.idsucursal = s.idsucursal) INNER JOIN item i ON(i.iditem = v.iditems) INNER JOIN producto  p ON (i.idproducto = p.idproducto) GROUP BY s.idsucursal ORDER BY s.nombre
+
+9 = SELECT DISTINCT(c.idCliente), c.Nombre, c.Apellido, c.DNI, ven.idVendedor,ven.Nombre, ven.Apellido, ven.DNI, s.Nombre FROM vendedor ven, cliente c INNER JOIN venta vta ON (vta.idCliente = c.idCliente) INNER JOIN sucursal s ON (s.idSucursal = vta.idSucursal) WHERE ven.idVendedor = vta.idVendedor ORDER BY `s`.`Nombre` ASC
+
+10= SELECT DISTINCT(s.Nombre), ven.Nombre, ven.Apellido, (ven.Basico + ven.Comision * i.cantidad) FROM vendedor ven INNER JOIN venta v ON (v.idVendedor = ven.idVendedor) INNER JOIN item i ON (i.idVenta = v.idVenta) INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal) ORDER BY `s`.`Nombre` ASC
+
+11= SELECT c.*, s.Nombre,MAX(i.cantidad*p.Precio) FROM cliente c INNER JOIN venta v ON (v.idCliente = c.idCliente) INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal) INNER JOIN item i ON (i.idVenta = v.idVenta) INNER JOIN producto p ON (p.idProducto = i.idProducto) GROUP BY S.Direccion, S.Nombre ORDER BY `s`.`Nombre` ASC
+
+12= SELECT s.Nombre, MAX(i.cantidad*p.Precio) AS MEJOR, MIN(I.cantidad*p.Precio) AS PEOR FROM venta v INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal) INNER JOIN item i ON (i.idVenta = v.idVenta) INNER JOIN producto p ON (p.idProducto = i.idProducto) GROUP BY S.Direccion, S.Nombre ORDER BY `s`.`Nombre` ASC
