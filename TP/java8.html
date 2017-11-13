@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ejer 8 Java</title>
+</head>
+<body>
+  <table id="table" border="1">
+    <tr>
+      <td>Row1 Cell1</td>
+      <td>Row1 Cell2</td>
+    </tr>
+    <tr>
+      <td>Row2 Cell1</td>
+      <td>Row2 Cell2</td>
+    </tr>
+    
+  </table></br>
+  <script type="text/javascript">
+  function Agregar() { 
+      var tabla = document.getElementById('table');
+      var tr = document.createElement('tr');
+      var td = tr.appendChild(document.createElement('td'));
+        td.innerHTML = "Row3 Cell1"
+      var td = tr.appendChild(document.createElement('td'));
+        td.innerHTML = "Row3 Cell2"
+        tabla.appendChild(tr);
+  }
+  </script>
+    <button onclick="Agregar()">Agregar fila</button>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="iso-8859-1" />
+    <title>Javascript Ejercicio 11</title>
+    <script type="text/javascript">
+    	function js_style() { 
+    		var valor = document.querySelector("#negritas");
+    			valor.style.background="red";
+    	}
+    </script>
+    <style type="text/css">
+        #negritas { font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div onmouseover="js_style()" >Resaltar Negritas</div>
+    <div>
+        <div  id="negritas">Son tres las cosas que le diría a un equipo para ayudarlo a mantenerse unido: Cuando algo resulta mal: yo lo hice. Cuando algo resulta más o menos bien: nosotros lo hicimos. Cuando algo resulta realmente bien: ustedes lo hicieron</div>
+	</div>
+</body>
+</html>

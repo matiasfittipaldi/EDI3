@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="iso-8859-1" />
+    <title>Javascript Ejercicio 11</title>
+    <script type="text/javascript">
+        function add() { 
+            var x = document.getElementById("combo");
+            var option = document.createElement("option");
+            option.text = document.getElementById("texto").value;
+            x.add(option);
+        }
+        function remove() { 
+            var select = document.getElementById('combo');
+            var value = select.selectedIndex;
+                select.removeChild(select[value]);
+        }
+    </script>
+</head>
+<body>  
+    <form>
+        <input id="texto" type="text">
+        <input onclick="add();" type="button" value="Agregar">
+        <input type="button" value="Quitar" onclick="remove();">
+        <br>
+        <select id="combo">
+            <option>Opción 1</option>
+            <option>Opción 2</option>
+            <option>Opción 3</option>
+        </select>
+    </form>
+</body>
+</html>
