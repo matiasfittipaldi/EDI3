@@ -1,4 +1,4 @@
-/* 1*/
+/* 1 Bien*/
 DELIMITER $$
 CREATE PROCEDURE CrearCliente(NomN VARCHAR(45), ApeN VARCHAR(45	), DirN VARCHAR (45), DNIN VARCHAR (45)) 
 BEGIN
@@ -12,7 +12,7 @@ BEGIN
 END
 END $$
 
-/* 2*/ 
+/* 2 BIEN*/ 
 DELIMITER $$
 CREATE PROCEDURE Asignar(DNIN VARCHAR (45), NombreN VARCHAR(45))
 BEGIN
@@ -31,7 +31,7 @@ BEGIN
   	  END IF;
      END;
      ELSE
-     	SELECT "LA SUCURSAL NO EXISTE";
+     	SELECT 'LA SUCURSAL NO EXISTE';
      END IF;
   END;
   ELSE 
@@ -39,7 +39,7 @@ BEGIN
   END IF;
 END $$ 
 
-/* 3*/
+/* 3 Con Correccion*/
 DELIMITER $$
 CREATE PROCEDURE Agregar(myVenta VARCHAR(45), myProducto VARCHAR (45), myCant VARCHAR(45), mySuc VARCHAR (45))
 BEGIN
@@ -55,7 +55,26 @@ if ((SELECT st.Cantidad FROM stock st INNER JOIN producto pr ON (pr.idProducto =
    	END IF ;
 END$$
 
-/* 4*/
+-- Falta validar que el producto exista en la sucursal
+DELIMITER $$
+CREATE PROCEDURE Agregar(myVenta VARCHAR(45), myProducto VARCHAR (45), myCant VARCHAR(45), mySuc VARCHAR (45))
+BEGIN
+DECLARE myidproducto INT ;
+if exists (SELECT st.Cantidad FROM scursal s INNER JOIN stock st ON s.idSucursal = st.idSucursal INNER JOIN producto p on p.idProducto = st.idProducto WHERE p.Nombre = myProducto) THEN
+	if ((SELECT st.Cantidad FROM stock st INNER JOIN producto pr ON (pr.idProducto = st.idProducto) WHERE pr.Nombre = myProducto and st.idSucursal = mySuc) > myCant) THEN
+		SET myidproducto = (SELECT idProducto FROM producto WHERE Nombre = myProducto);
+
+		INSERT INTO item (cantidad,idItem,idProducto,idVenta) VALUES (myCant,2022,myidproducto,myVenta);
+		UPDATE stock SET Cantidad = Cantidad - myCant;
+	ELSE
+		SELECT 'STOCK INSUFICIENTE';
+	END IF ;
+ELSE
+		SELECT 'PRODUCTO NO EXISTE EN SUCURSAL INSUFICIENTE';
+	END IF ;
+END$$
+
+/* 4  Con Correccion*/
 DELIMITER $$
 CREATE PROCEDURE Actualizar(porcentaje INT) 
 BEGIN
@@ -68,20 +87,34 @@ BEGIN
 	END IF;
 END $$
 
-/* 5*/
+-- El SP anterior no es correcto porque solo se esta consultado por si existe algun producto que halla vendido mas de 10 unidade y en caso de que asi sea se actualizan todo los producto
+-- Lo que se quiere es que solo se actualicen los productos que tiene mas de 1o ventas por lo que hay que hacer un update con un WHERE. Este WHERE tiene que filtrar los productos por cantidad de ventas 
+DELIMITER &&
+create procedure Actualizar(porcentaje int )
+begin
+update producto p 
+set p.Precio = (p.Precio + porcentaje * p.Precio / 100)
+where
+	(select sum(i.cantidad) from venta v 
+	inner join item i on v.iditems=i.iditem where
+	i.idproducto=p.idproducto) > 10;
+end &&
+
+/* 5 Bien pero con error de sintaxis*/
 DELIMITER $$
 CREATE PROCEDURE Stock(mystock varchar(45),mysuc varchar (45),cantidad int)
 BEGIN
 IF EXISTS ( SELECT s.* FROM sucursal s WHERE s.Nombre = mysuc ) THEN  
 BEGIN
- DECLARE myidsuc INT ;
- SET myidsuc = (SELECT s.idSucursal from sucursal s WHERE s.Nombre = mysuc);
-      IF EXISTS ( SELECT s.* FROM stock INNER JOIN producto p ON (p.idProducto = stock.idProducto) WHERE p.Nombre LIKE myprod ) THEN 
-      UPDATE stock SET stock.Cantidad = mystock ;
+	DECLARE myidsuc INT ;
+	SET myidsuc = (SELECT s.idSucursal from sucursal s WHERE s.Nombre = mysuc);
+		IF EXISTS ( SELECT s.* FROM stock INNER JOIN producto p ON (p.idProducto = stock.idProducto) WHERE p.Nombre LIKE myprod ) THEN 
+			UPDATE stock SET stock.Cantidad = mystock ;
         ELSE
           INSERT INTO stock VALUES (mystock,1001,2020,myidsuc);
-        END IF  ;
+        END IF;
+END;
 ELSE
-      SELECT "nO EXISTE SUCURSAL" ;
-END IF  ;
+      SELECT 'NO EXISTE SUCURSAL' ;
+END IF;
 END $$

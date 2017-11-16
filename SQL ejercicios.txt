@@ -1,35 +1,130 @@
-	1 =	SELECT * FROM `vendedor` WHERE Apellido LIKE "A%" AND Apellido LIKE "%Z"
+	-- 1= Bien
+		SELECT * FROM `vendedor` WHERE Apellido LIKE "A%" AND Apellido LIKE "%Z"
 
-	2 =	SELECT S.Nombre, C.Nombre, C.Apellido, V.idVenta FROM venta v 
+	-- 2= Bien
+		SELECT S.Nombre, C.Nombre, C.Apellido, V.idVenta FROM venta v 
 		INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal)
 		INNER JOIN cliente c ON (C.idCliente = v.idCliente )
 		WHERE S.Nombre LIKE "%SAXONN%" GROUP BY c.idCliente
 
-	3 =	SELECT S.Nombre , S.Direccion, COUNT(V.idVendedor) FROM venta v 
+	-- 3= Bien	
+		SELECT S.Nombre , S.Direccion, COUNT(V.idVendedor) FROM venta v 
 		INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal)
 		GROUP BY v.idSucursal
 
-	4 =	SELECT P.Nombre,SUM(I.cantidad) FROM producto P INNER JOIN item i ON (i.idProducto = p.idProducto) GROUP BY P.Nombre
+	-- 4= Bien
+		SELECT P.Nombre,SUM(I.cantidad) 
+		FROM producto P 
+        INNER JOIN item i ON (i.idProducto = p.idProducto)
+        GROUP BY P.Nombre
 
-	5 =	SELECT s.Nombre, SUM(i.cantidad) as TOT from sucursal s
+	-- 5= Excelente, falto mostrar columna idSucursal y Direccion
+    
+		SELECT s.idSucursal, s.Nombre, s.Direccion, SUM(i.cantidad) as TOT 
+        from sucursal s
 		INNER JOIN venta v ON (v.idSucursal = s.idSucursal)
 		INNER JOIN item i ON (I.idVenta = V.idVenta)  
-		GROUP by s.Nombre
+		GROUP by s.idSucursal, s.Nombre, s.Direccion
 		HAVING TOT > 1
 		LIMIT 1,10
 
-	6 =	select ve.Nombre, COUNT(vta.idVenta) as cantidad FROM venta vta 
+	-- 6= Excelente, falto mostrar columna ve.idVendedor, ve.Apellido, ve.DNI, ve.Comision y ve.Basico
+		select ve.idVendedor, ve.Nombre, ve.Apellido, ve.DNI, ve.Comision, ve.Basico, COUNT(vta.idVenta) as cantidad FROM venta vta 
 		INNER JOIN vendedor ve ON (ve.idVendedor = vta.idVendedor) 
 		GROUP BY vta.idVendedor HAVING cantidad > 2
 
-	7 = SELECT Nombre,Apellido,DNI FROM vendedor v LEFT JOIN venta vta ON (v.idVendedor = vta.idVendedor) WHERE vta.idVenta is NULL
+	-- 7= Excelente
+		SELECT Nombre,Apellido,DNI 
+        FROM vendedor v 
+			LEFT JOIN venta vta ON (v.idVendedor = vta.idVendedor) 
+		WHERE vta.idVenta is NULL
 
-	8 = SELECT s.*,p.*,sum(i.cantidad) FROM venta v INNER JOIN sucursal s on (v.idsucursal = s.idsucursal) INNER JOIN item i ON(i.iditem = v.iditems) INNER JOIN producto  p ON (i.idproducto = p.idproducto) GROUP BY s.idsucursal ORDER BY s.nombre
+	-- 8= Con correccion
+    -- Esta consuta retorna la cantidad de ventas de todos los producto por cada una de las sucursales, pero no el mejor producto de cada una de las sucursales
+		SELECT s.*,p.*,sum(i.cantidad) 
+        FROM venta v 
+			INNER JOIN sucursal s on (v.idsucursal = s.idsucursal) 
+            INNER JOIN item i ON(i.iditem = v.iditems) 
+            INNER JOIN producto  p ON (i.idproducto = p.idproducto) 
+		GROUP BY s.idsucursal 
+        ORDER BY s.nombre
+        
+		-- Este ejercicio se compone de dos consultas donde una de ellas calculo la cantidad de ventas de cada uno de los prductos (sentencia select que se usa como FROM) la segunda consula obtiene los registros cuya venta sea maxima. 
+		-- El secreto de este ejercicio es utilizar la respuesta de una consulta select como tabla para ser incluida en una nueva sentencia select mayor
+			select sucursalNombre, prductoNombre, MAX(cantidad)
+			from 
+				(select s.Nombre sucursalNombre, p.nombre prductoNombre, sum(i.cantidad) cantidad
+				from sucursal s 
+					inner join venta v on s.idSucursal = v.idSucursal
+					inner join item i on v.idItems = i.idItem
+					inner join producto p on i.idProducto = p.idProducto
+				group by s.Nombre, p.nombre) datos
+			group by sucursalNombre;
 
-	9 = SELECT DISTINCT(c.idCliente), c.Nombre, c.Apellido, c.DNI, ven.idVendedor,ven.Nombre, ven.Apellido, ven.DNI, s.Nombre FROM vendedor ven, cliente c INNER JOIN venta vta ON (vta.idCliente = c.idCliente) INNER JOIN sucursal s ON (s.idSucursal = vta.idSucursal) WHERE ven.idVendedor = vta.idVendedor ORDER BY `s`.`Nombre` ASC
+	-- 9= Con Correccion
+		SELECT DISTINCT(c.idCliente), c.Nombre, c.Apellido, c.DNI, ven.idVendedor,ven.Nombre, ven.Apellido, ven.DNI, s.Nombre 
+        FROM vendedor ven, cliente c 
+			INNER JOIN venta vta ON (vta.idCliente = c.idCliente) 
+            INNER JOIN sucursal s ON (s.idSucursal = vta.idSucursal) 
+		WHERE ven.idVendedor = vta.idVendedor ORDER BY `s`.`Nombre` ASC;
+	
+    -- Creo que no se entiendio la consigna. La consulta correcta es la siguiente.
+		select nombre, apellido, 'Cliente'
+		from cliente 
 
-	10= SELECT DISTINCT(s.Nombre), ven.Nombre, ven.Apellido, (ven.Basico + ven.Comision * i.cantidad) FROM vendedor ven INNER JOIN venta v ON (v.idVendedor = ven.idVendedor) INNER JOIN item i ON (i.idVenta = v.idVenta) INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal) ORDER BY `s`.`Nombre` ASC
+		union 
 
-	11= SELECT c.*, s.Nombre,MAX(i.cantidad*p.Precio) FROM cliente c INNER JOIN venta v ON (v.idCliente = c.idCliente) INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal) INNER JOIN item i ON (i.idVenta = v.idVenta) INNER JOIN producto p ON (p.idProducto = i.idProducto) GROUP BY S.Direccion, S.Nombre ORDER BY `s`.`Nombre` ASC
+		select nombre, apellido, 'Vendedor'
+		from vendedor
 
-	12= SELECT s.Nombre, MAX(i.cantidad*p.Precio) AS MEJOR, MIN(I.cantidad*p.Precio) AS PEOR FROM venta v INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal) INNER JOIN item i ON (i.idVenta = v.idVenta) INNER JOIN producto p ON (p.idProducto = i.idProducto) GROUP BY S.Direccion, S.Nombre ORDER BY `s`.`Nombre` ASC
+	-- 10= Excelente
+		SELECT DISTINCT(s.Nombre), ven.Nombre, ven.Apellido, (ven.Basico + ven.Comision * i.cantidad) 
+		FROM vendedor ven 
+			INNER JOIN venta v ON (v.idVendedor = ven.idVendedor) 
+            INNER JOIN item i ON (i.idVenta = v.idVenta) 
+            INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal) 
+		ORDER BY `s`.`Nombre` ASC;
+
+	-- 11= Con Correccion, esta consulta retirna el cliente con mejor compra en uno de los items de la venta, pero no contempla el total de items de la venta para calcular la mejor venta
+		SELECT c.*, s.Nombre,MAX(i.cantidad*p.Precio) 
+        FROM cliente c 
+			INNER JOIN venta v ON (v.idCliente = c.idCliente) 
+            INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal) 
+            INNER JOIN item i ON (i.idVenta = v.idVenta) 
+            INNER JOIN producto p ON (p.idProducto = i.idProducto) 
+		GROUP BY S.Direccion, S.Nombre ORDER BY `s`.`Nombre` ASC
+        
+        -- Este ejercicio se resuelve de forma similar que el ejercicio 8 utilizando dos consultas. La primera consulta retorna el listado de todos los clientes por sucursal con su total de compras
+		-- El resultado de esta consulta se utiliza como tabla para la consulta principal donde esta hace una max del total de ventas calculado por cliente.
+
+		select NombreSucursal, Nombre, Apellido, DNI, Direccion, MAX(totalCompras)
+		from 
+			(Select s.nombre NombreSucursal, c.Nombre, c.Apellido, c.DNI, c.Direccion, sum(i.cantidad * p.Precio) totalCompras
+			from sucursal s
+				inner join venta v on s.idSucursal = s.idSucursal
+				inner join cliente c on c.idCliente = v.idCliente
+				inner join item i on v.idVenta = i.idVenta
+				inner join producto p on i.idProducto = p.idProducto
+			group by s.nombre, c.Nombre, c.Apellido, c.DNI, c.Direccion) AS datos
+		group by NombreSucursal, Nombre, Apellido, DNI, Direccion
+
+	-- 12= Con Correccion, el planteo esta excelente solo que como el ejercicio anterior  se esta contemplando solo un item de la venta y no el total de la venta
+		SELECT s.Nombre, MAX(i.cantidad*p.Precio) AS MEJOR, MIN(I.cantidad*p.Precio) AS PEOR 
+        FROM venta v 
+			INNER JOIN sucursal s ON (s.idSucursal = v.idSucursal) 
+			INNER JOIN item i ON (i.idVenta = v.idVenta) 
+            INNER JOIN producto p ON (p.idProducto = i.idProducto) 
+            GROUP BY S.Direccion, S.Nombre ORDER BY `s`.`Nombre` ASC
+            
+		-- Este ejercicio se resuelve de forma similar que el ejercicio 8 y 11 utilizando dos consultas. La primera consulta retorna el listado de todos las ventas por sucursal
+		-- El resultado de esta consulta se utiliza como tabla para la consulta principal donde esta hace una max y min de total de ventas
+		select s.Nombre, max(VentaTotal) MejorVenta, min(VentaTotal) PeorVenta
+		from
+			(select s.idSucursal, sum(i.cantidad * p.precio) VentaTotal
+			from sucursal s 
+				inner join venta v on v.idSucursal = s.idSucursal  
+				inner join item i on i.idVenta = v.idVenta
+				inner join producto p on p.idProducto = i.idProducto
+			group by s.idSucursal) datos
+			inner join sucursal s on datos.idSucursal = s.idSucursal
+		group by Nombre;
